@@ -9,8 +9,8 @@ const PORT = process.env.PORT || 5000
 app.use(cors())
 app.use(express.json())
 
-// Serve static files from React app
-app.use(express.static(path.join(__dirname, '../app/build')))
+// Remove static file serving for API-only deployment
+// app.use(express.static(path.join(__dirname, '../app/build')))
 
 mongoose.connect("mongodb+srv://aarthi_db_user:MongoDB%402025@cluster.9gp09p3.mongodb.net/?appName=Cluster")
 
@@ -143,10 +143,10 @@ app.post("/links/reorder", async (req, res) => {
     }
 })
 
-// The "catchall" handler: for any request that doesn't match an API route, send back React's index.html
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../app/build/index.html'))
-})
+// Remove catchall route for API-only deployment
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../app/build/index.html'))
+// })
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`)
