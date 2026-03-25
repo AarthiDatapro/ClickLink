@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000'
-
 function Home({ refreshKey, editable }) {
     const [links, setLinks] = useState([])
     const [loading, setLoading] = useState(false)
@@ -18,7 +16,7 @@ function Home({ refreshKey, editable }) {
         setLoading(true)
         setError("")
         try {
-            const res = await axios.get(`${API_URL}/links`)
+            const res = await axios.get("http://localhost:5000/links")
             setLinks(res.data)
         } catch (err) {
             console.error(err)
@@ -71,7 +69,7 @@ function Home({ refreshKey, editable }) {
         const ok = window.confirm("Delete this link?")
         if (!ok) return
         try {
-            await axios.delete(`${API_URL}/links/${id}`)
+            await axios.delete(`http://localhost:5000/links/${id}`)
             if (editingId === id) cancelEdit()
             await fetchLinks()
         } catch (err) {
@@ -81,7 +79,7 @@ function Home({ refreshKey, editable }) {
     }
 
     const persistOrder = async (orderedIds) => {
-        await axios.post(`${API_URL}/links/reorder`, { orderedIds })
+        await axios.post("http://localhost:5000/links/reorder", { orderedIds })
     }
 
     const handleDropOn = async (targetId, e) => {

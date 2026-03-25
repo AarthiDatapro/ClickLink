@@ -1,37 +1,10 @@
 import { useState } from "react"
 import axios from "axios"
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000'
-
 function Admin({ onLogout, onLinkAdded }) {
     const [name, setName] = useState("")
     const [url, setUrl] = useState("")
     const [submitting, setSubmitting] = useState(false)
-    const [editingId, setEditingId] = useState(null)
-    const [draftName, setDraftName] = useState("")
-    const [draftUrl, setDraftUrl] = useState("")
-
-    const fetchLinks = async () => {
-        try {
-            const res = await axios.get(`${API_URL}/links`)
-            return res.data
-        } catch (err) {
-            console.error(err)
-            return []
-        }
-    }
-
-    const startEdit = (link) => {
-        setEditingId(link._id)
-        setDraftName(link.name || "")
-        setDraftUrl(link.url || "")
-    }
-
-    const cancelEdit = () => {
-        setEditingId(null)
-        setDraftName("")
-        setDraftUrl("")
-    }
 
     const addLink = async () => {
         if (!name || !url) return alert("Please fill all fields")
@@ -39,7 +12,7 @@ function Admin({ onLogout, onLinkAdded }) {
 
         try {
             setSubmitting(true)
-            await axios.post(`${API_URL}/links`, {
+            await axios.post("http://localhost:5000/links", {
                 name,
                 url
             })
@@ -53,22 +26,6 @@ function Admin({ onLogout, onLinkAdded }) {
             alert("Failed to publish link")
         } finally {
             setSubmitting(false)
-        }
-    }
-
-    const saveEdit = async (id) => {
-        if (!draftName || !draftUrl) return alert("Please fill all fields")
-        try {
-            await axios.put(`${API_URL}/links/${id}`, {
-                name: draftName,
-                url: draftUrl,
-            })
-            cancelEdit()
-            await fetchLinks()
-            alert("Link updated")
-        } catch (err) {
-            console.error(err)
-            alert("Failed to update link")
         }
     }
 
