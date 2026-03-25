@@ -2,6 +2,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 const cors = require("cors")
 const path = require("path")
+require('dotenv').config()
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -12,7 +13,14 @@ app.use(express.json())
 // Remove static file serving for API-only deployment
 // app.use(express.static(path.join(__dirname, '../app/build')))
 
-mongoose.connect("mongodb+srv://aarthi_db_user:MongoDB%402025@cluster.9gp09p3.mongodb.net/?appName=Cluster")
+mongoose.connect(process.env.MONGODB_URI || "mongodb+srv://aarthi_db_user:MongoDB%402025@cluster.9gp09p3.mongodb.net/?appName=Cluster")
+    .then(() => {
+        console.log("Connected to MongoDB")
+    })
+    .catch((err) => {
+        console.error("MongoDB connection error:", err)
+        process.exit(1)
+    })
 
 const LinkSchema = new mongoose.Schema(
     {
@@ -150,4 +158,15 @@ app.post("/links/reorder", async (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`)
+})
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+    console.log('SIGTERM received, shutting down gracefully')
+    process.exit(0)
+})
+
+process.on('SIGINT', () => {
+    console.log('SIGINT received, shutting down gracefully')
+    process.exit(0)
 })
