@@ -22,6 +22,10 @@ const LinkSchema = new mongoose.Schema(
 const Link = mongoose.model("Link", LinkSchema)
 
 /* ---------------- LOGIN API ---------------- */
+app.get("/", (req, res) => {
+  res.send("Hello from Node.js on Hugging Face!");
+});
+
 
 app.post("/login", (req, res) => {
 
